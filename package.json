@@ -1,0 +1,20 @@
+{
+  "name": "postman",
+  "version": "1.0.0",
+  "description": "Postman API tests",
+  "scripts": {
+    "api-tests-CMC-comparison": "newman run CoinMarketCap_Price_Comparison.postman_collection.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HatimCrypto/Postman.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/HatimCrypto/Postman/issues"
+  },
+  "homepage": "https://github.com/HatimCrypto/Postman#readme",
+  "dependencies": {
+    "newman": "^3.9.3"
+  }
+}
