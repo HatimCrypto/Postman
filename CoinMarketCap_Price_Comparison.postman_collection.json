@@ -1,6 +1,6 @@
 {
 	"info": {
-		"name": "CoinMarketCap Price Comparison",
+		"name": "CoinMarketCap_Price_Comparison",
 		"_postman_id": "7e836507-bc41-4966-afde-1a23e763048a",
 		"description": "This collection compares the price of each coin on the Cryptocomare API to the price on Coinmarketcap.com.\n\nIf there is a percentage difference of 10% or more tests will fail and data will need to be reviewed.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
