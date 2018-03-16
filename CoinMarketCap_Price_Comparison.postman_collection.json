@@ -70,7 +70,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ab421a6c-5587-4afc-b9fd-d55c40b5e21e",
+								"id": "8477d7ff-f5ca-425b-bf09-6d1d17cd3cd5",
 								"type": "text/javascript",
 								"exec": [
 									"//call coinmarket before executing to update BTC_price global var",
@@ -87,7 +87,7 @@
 									"percentageDiff = (a - b) /  a * 100;",
 									"console.log(percentageDiff);",
 									"",
-									"tests[\"Coin market cap BTC price should not be + 10% from Cryptocompare BTC price\"] = percentageDiff > 10;",
+									"tests[\"Coin market cap BTC price should not be + 10% from Cryptocompare BTC price\"] = percentageDiff < 10;",
 									"",
 									"tests[\"Coin market cap BTC price should not be - 10% from Cryptocompare BTC price\"] = percentageDiff > -10;",
 									"",
