@@ -4,6 +4,7 @@
   "description": "Postman API tests",
   "scripts": {
     "api-tests-CMC-comparison": "newman run CoinMarketCap_Price_Comparison.postman_collection.json"
+    "public-api-tests": "newman run CryptoCompare_Public_API.postman_collection.json "
   },
   "repository": {
     "type": "git",
