@@ -367,7 +367,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f0bc06a8-ddd5-47e9-b7b0-b367bd7a9b96",
+								"id": "d99a11e9-922c-4152-963a-a99c079f6725",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -383,7 +383,7 @@
 									"    //console.log(obj.low);",
 									"}",
 									"",
-									"tests[\"High value must be greater than Low value\"] = obj.high > obj.low;",
+									"tests[\"High value must be greater than Low value\"] = obj.high >= obj.low;",
 									"",
 									"//Check that Response = Success",
 									"tests[\"Response = Success\"] = jsonData.Response === \"Success\";",
@@ -465,7 +465,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "57a2d748-5dcc-4a87-955a-8848bf868547",
+								"id": "feafe19b-2de7-4387-b19e-d62cec2de0b2",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -482,7 +482,7 @@
 									"    //console.log(obj.low);",
 									"}",
 									"",
-									"tests[\"High value must be greater than Low value\"] = obj.high > obj.low;",
+									"tests[\"High value must be greater than Low value\"] = obj.high >= obj.low;",
 									"//Check that Response = Success",
 									"tests[\"Response = Success\"] = jsonData.Response === \"Success\";",
 									"",
@@ -563,7 +563,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d02c57b6-962e-47ec-ae2e-aed3c4cbb5f2",
+								"id": "7afee030-b59d-468e-9afb-f02db09fcc93",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -602,7 +602,7 @@
 									"",
 									"for (var i = 0; i < jsonData.Data.length; i++){",
 									"    var obj = jsonData.Data[i];",
-									"    tests[\"High value must be greater than Low value\"] = obj.high > obj.low;",
+									"    tests[\"High value must be greater than Low value\"] = obj.high >= obj.low;",
 									"}",
 									"",
 									"for (var i = 1; i < jsonData.Data.length; i++){",
