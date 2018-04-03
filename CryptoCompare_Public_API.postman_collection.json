@@ -16,7 +16,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a27ed7df-ef1d-4add-b541-910f6a2c13be",
+								"id": "01028a60-8fb8-4ca5-8dea-659d8e17a5c9",
 								"type": "text/javascript",
 								"exec": [
 									"tests[\"Status code is 200\"] = responseCode.code === 200",
@@ -347,6 +347,104 @@
 								{
 									"key": "e",
 									"value": "Bitfinex",
+									"equals": true
+								}
+							]
+						},
+						"description": "Compute the current trading info (price, vol, open, high, low etc) of the requested pair as a volume weighted average based on the exchanges requested."
+					},
+					"response": []
+				},
+				{
+					"name": "Test max query length",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e4d4bd20-6ff4-4ef6-b4d5-a0809c9636b1",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Error\"] = jsonData.Response === \"Error\"",
+									"tests[\"Message = Maxlength error\"] = jsonData.Message === \"fsym param is invalid. (fsym length is higher than maxlength: 10)\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://min-api.cryptocompare.com/data/price?fsym=BTC,ETH,XRP&tsyms=USD",
+							"protocol": "https",
+							"host": [
+								"min-api",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"data",
+								"price"
+							],
+							"query": [
+								{
+									"key": "fsym",
+									"value": "BTC,ETH,XRP",
+									"equals": true
+								},
+								{
+									"key": "tsyms",
+									"value": "USD",
+									"equals": true
+								}
+							]
+						},
+						"description": "Compute the current trading info (price, vol, open, high, low etc) of the requested pair as a volume weighted average based on the exchanges requested."
+					},
+					"response": []
+				},
+				{
+					"name": "Test max query length Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e4d4bd20-6ff4-4ef6-b4d5-a0809c9636b1",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Error\"] = jsonData.Response === \"Error\"",
+									"tests[\"Message = Maxlength error\"] = jsonData.Message === \"fsym param is invalid. (fsym length is higher than maxlength: 10)\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://min-api.cryptocompare.com/data/price?fsym=BTC,ETH,XRP&tsyms=USD",
+							"protocol": "https",
+							"host": [
+								"min-api",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"data",
+								"price"
+							],
+							"query": [
+								{
+									"key": "fsym",
+									"value": "BTC,ETH,XRP",
+									"equals": true
+								},
+								{
+									"key": "tsyms",
+									"value": "USD",
 									"equals": true
 								}
 							]
@@ -1264,7 +1362,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c3b39bdc-2df7-40c6-bdbd-87a6871627d7",
+								"id": "55fba48e-5b16-4bd0-bbd7-b31d3fbb9aaa",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -1284,6 +1382,10 @@
 									"    pm.expect(pm.response.text()).to.include(\"ProofType\");",
 									"    pm.expect(pm.response.text()).to.include(\"Type\");",
 									"    pm.expect(pm.response.text()).to.include(\"DocumentType\");",
+									"    pm.expect(pm.response.text()).to.include(\"NetHashesPerSecond\");",
+									"    pm.expect(pm.response.text()).to.include(\"BlockNumber\");",
+									"    pm.expect(pm.response.text()).to.include(\"BlockTime\");",
+									"    pm.expect(pm.response.text()).to.include(\"BlockReward\");",
 									"});",
 									"",
 									"",
@@ -1444,6 +1546,2109 @@
 			"name": "News",
 			"description": "",
 			"item": [
+				{
+					"name": "Exclude categories ",
+					"description": "Checks JSON response that excluded categories are not present ",
+					"item": [
+						{
+							"name": "Exclude BTC",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3db9e949-74c2-46d5-b687-c6b61cc6e918",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC",
+											"equals": true
+										}
+									]
+								},
+								"description": "Checks that BTC articles are not present "
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "efeacad7-6709-4ec6-a219-2f4804559ec6",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "538d28d3-a621-4bde-843f-486569824911",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bb0f3ab5-d7fa-4135-a3d6-be6f4d0391d6",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ae707e16-795a-43cf-8861-258882c5fc6d",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6c07a926-caf8-448d-b212-7d2c64add556",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d8807741-9bbd-4499-8059-b0ad46a22685",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ba6a8dc7-f66c-4c8b-934b-84f4f7577d7f",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e34cae3d-97b9-4083-aeea-17d5ca74717c",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "313d7e77-2857-41ef-8332-eead160fde54",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "17956c1d-1bc6-421f-9853-ab1e910376b1",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c78e726f-e0b6-4994-aa4b-c258d64ca470",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3689142d-021d-4e1a-87c0-7445d38e3474",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "23d19260-35a9-434e-8922-3eef1f45d87c",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bedf5226-01e7-41dd-9727-7cdcd31d1af4",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b59b7bda-6812-4c2a-b47c-09a142a2b5e2",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5f0ba18c-0c31-4dc2-a979-5265396a1d6e",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7b815254-b532-4b90-ac89-04a50988183b",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a1cd5a6f-22ac-493f-9c4c-a81fa671b76b",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3c0f6efa-6d1a-45f3-88e1-d057c5a90003",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7de10da4-890f-41d0-a32f-2e2586e8088c",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6b893a3d-dde0-4d54-af0e-d80d2889c508",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7d15b03f-ed95-405a-8900-ca5b194f8b04",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\",",
+											"\"Altcoin\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "292cf4f3-0c57-4303-ae25-915e6e7ef7d8",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\",",
+											"\"Altcoin\",",
+											"\"Fiat\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8b7fd0ba-3e55-4d16-8661-39160ff405f8",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\",",
+											"\"Altcoin\",",
+											"\"Fiat\",",
+											"\"Business\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bee04200-4bc9-4193-aca2-9bbd6aa1c899",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\",",
+											"\"Altcoin\",",
+											"\"Fiat\",",
+											"\"Business\",",
+											"\"Commodity\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Exclude BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange ,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity,Sponsored",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fe6eaa06-f22f-4304-9db9-310fcab01bfb",
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"var isValid = true;",
+											"",
+											"var unexpected_categories = ",
+											"[\"BTC\",",
+											"\"ETH\",",
+											"\"LTC\",",
+											"\"XMR\",",
+											"\"ZEC\",",
+											"\"ETC\",",
+											"\"XRP\",",
+											"\"TRX\",",
+											"\"ADA\",",
+											"\"DASH\",",
+											"\"XTZ\",",
+											"\"USDT\",",
+											"\"Mining\",",
+											"\"Exchange\",",
+											"\"Market\",",
+											"\"Asia\",",
+											"\"ICO\",",
+											"\"Regulation\",",
+											"\"Blockchain\",",
+											"\"Trading\",",
+											"\"Technology\",",
+											"\"Wallet\",",
+											"\"Altcoin\",",
+											"\"Fiat\",",
+											"\"Business\",",
+											"\"Commodity\"];",
+											"",
+											"for (var i = 0; i < jsonData.length; i++){",
+											"    var categories = jsonData[i].categories;",
+											"    // console.log(categories);",
+											"    if (unexpected_categories.some(uc => categories.includes(uc)) ) {",
+											"        isValid = false;",
+											"        ",
+											"    }",
+											"}",
+											"",
+											"tests[\"Categories do not include \" + unexpected_categories] = isValid;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "https://min-api.cryptocompare.com/data/news/?excludeCategories=BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity,Sponsored",
+									"protocol": "https",
+									"host": [
+										"min-api",
+										"cryptocompare",
+										"com"
+									],
+									"path": [
+										"data",
+										"news",
+										""
+									],
+									"query": [
+										{
+											"key": "excludeCategories",
+											"value": "BTC,ETH,LTC,XMR,ZEC,ETC,XRP,TRX,ADA,DASH,XTZ,USDT,Mining,Exchange,Market,Asia,ICO,Regulation,Blockchain,Trading,Technology,Wallet,Altcoin,Fiat,Business,Commodity,Sponsored",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a7cf7dbd-9cba-434b-93fb-30e9d17444f4",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "667f54be-b83a-4317-9f89-54f715ae7b46",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
 				{
 					"name": "List news providers",
 					"event": [
@@ -1611,6 +3816,68 @@
 							]
 						},
 						"description": "Returns news articles categories, you can use them to filter news "
+					},
+					"response": []
+				},
+				{
+					"name": "Feeds & Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5f8a8f87-391b-44e9-812d-310c16a39bda",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Message = Providers and categories\"] = jsonData.Message === \"Providers and categories\";",
+									"tests[\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"",
+									"pm.test(\"All category fields are returned\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"categoryName\");",
+									"    pm.expect(pm.response.text()).to.include(\"wordsAssociatedWithCategory\");",
+									"});",
+									"",
+									"",
+									"",
+									"pm.test(\"All data is displayed\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"key\");",
+									"    pm.expect(pm.response.text()).to.include(\"name\");",
+									"    pm.expect(pm.response.text()).to.include(\"lang\");",
+									"    pm.expect(pm.response.text()).to.include(\"img\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://min-api.cryptocompare.com/data/news/feedsandcategories",
+							"protocol": "https",
+							"host": [
+								"min-api",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"data",
+								"news",
+								"feedsandcategories"
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				}
@@ -1820,6 +4087,659 @@
 							]
 						},
 						"description": "When tryConversion = True and pair is not trading - should return data"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"description": "",
+			"item": [
+				{
+					"name": "User login ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0991de5a-d0c1-42b2-8436-1faf4f5b98e1",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Correct Email address\"] = jsonData.Data.EmailAddress === \"truclipuri@2anom.com\"",
+									"tests [\"Correct Username\"] = jsonData.Data.Username === \"truclipuri\"",
+									"tests [\"Message = Login Success\"] = jsonData.Message === \"Login success\"",
+									"",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a11125ad-5c8e-4722-8208-58b566f5347d",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.sendRequest(\"https://www.cryptocompare.com/api/cryptopian/logout/\", function (err, response) {",
+									"    console.log(response.json());",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Username\": \"truclipuri@2anom.com\",\r\n\t\"Password\": \"Temp0rary\"\r\n}"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/cryptopian/login/",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"cryptopian",
+								"login",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "User logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e8fa622-4c6c-4b45-8635-0aaee880154c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Message = You have been logged out\"] = jsonData.Message === \"You have been logged out.\""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Username\": \"truclipuri@2anom.com\",\r\n\t\"Password\": \"Temp0rary\"\r\n}"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/cryptopian/logout/",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"cryptopian",
+								"logout",
+								""
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Portfolio",
+			"description": "",
+			"item": [
+				{
+					"name": "User login Portfolio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0991de5a-d0c1-42b2-8436-1faf4f5b98e1",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Correct Email address\"] = jsonData.Data.EmailAddress === \"truclipuri@2anom.com\"",
+									"tests [\"Correct Username\"] = jsonData.Data.Username === \"truclipuri\"",
+									"tests [\"Message = Login Success\"] = jsonData.Message === \"Login success\"",
+									"",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a11125ad-5c8e-4722-8208-58b566f5347d",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.sendRequest(\"https://www.cryptocompare.com/api/cryptopian/logout/\", function (err, response) {",
+									"    console.log(response.json());",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Username\": \"truclipuri@2anom.com\",\r\n\t\"Password\": \"Temp0rary\"\r\n}"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/cryptopian/login/",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"cryptopian",
+								"login",
+								""
+							]
+						},
+						"description": "Log in before starting portfolio tests"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new portfolio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1c3ed0ec-4822-442f-9bec-da5fd67d0e0d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Correct Username\"] = jsonData.Data.Name === \"Another Test\"",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\"",
+									"",
+									"//Set enviroment variable Portfolio ID as the newly created portfolio ",
+									"pm.environment.set(\"Portfolio_ID\", jsonData.Data.Id);"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "eae36569-150c-4a86-b93a-7e29e0ca957f",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{access: \"Private\", name: \"Another Test\", currency: \"USD\", description: \"Another Test\"}"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/create",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Existing portfolios ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d770706a-4431-4b1a-ac0a-a54bffecd2ba",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "366c4e68-8609-417d-b2a1-984ee6727691",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Correct Username\"] = jsonData.Data[1].Name === \"Another Test\";",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"//Check that Portfolio ID environment variable exists in the list of portfolios ",
+									"",
+									"",
+									"var isValid = false;",
+									"//Env variable stored as string - Parse as int",
+									"var expected_ID = parseInt(pm.environment.get(\"Portfolio_ID\"));",
+									"",
+									"for (var i = 0; i < jsonData.Data.length; i++){",
+									"    var ids = jsonData.Data[i].Id;",
+									"    console.log(ids);",
+									"    if (expected_ID === ids) {",
+									"        isValid = true;",
+									"    }",
+									"}",
+									"",
+									"tests[expected_ID + \" Portfolio ID is present\"] = isValid;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/get/portfolios/",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"get",
+								"portfolios",
+								""
+							]
+						},
+						"description": "Get all existing portfolios "
+					},
+					"response": []
+				},
+				{
+					"name": "Update portfolios",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "51be58c0-a935-410c-94d3-74281642cb84",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "56526a5b-b43f-49bd-8e73-61aa00848849",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{id: {{Portfolio_ID}}, name: \"Another Test\", description: \"Another Test change\", currency: \"GBP\", access: \"Private\"}\n"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/update",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add coin to portfolio",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "51be58c0-a935-410c-94d3-74281642cb84",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8861877a-0bb7-4cca-9783-37ab6e5703bf",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"var Port_ID = parseInt(pm.environment.get(\"Portfolio_ID\"));",
+									"",
+									"tests [\"Portfolio ID is correct\"] = jsonData.Data.PortfolioId === Port_ID ",
+									"",
+									"tests [\"Coin amount is correct\"] = jsonData.Data.Amount === 1.5 ",
+									"tests [\"Buy price is correct\"] = jsonData.Data.BuyPrice === 1.5",
+									"tests [\"Currency is correct\"] = jsonData.Data.BuyCurrency === \"USD\"",
+									"",
+									"",
+									"",
+									"pm.environment.set(\"Coin_ID\", jsonData.Data.Id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ amount:\"1.5\",\r\nboughtOnTs:\"1522752052\",\r\nbuyCurrency:\"USD\",\r\nbuyPrice:\"1.5\",\r\ncoinId:5039,\r\ndescription:\"The Description\",\r\nportfolioId:{{Portfolio_ID}} }\r\n"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/coinadd",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"coinadd"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update coin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "51be58c0-a935-410c-94d3-74281642cb84",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8b459753-2e6a-487a-b6b2-74c84ad95607",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"var Port_ID = parseInt(pm.environment.get(\"Portfolio_ID\"));",
+									"",
+									"tests [\"Portfolio ID is correct\"] = jsonData.Data.PortfolioId === Port_ID ",
+									"",
+									"tests [\"Coin amount is correct\"] = jsonData.Data.Amount === 1.5 ",
+									"tests [\"Buy price is correct\"] = jsonData.Data.BuyPrice === 2.5",
+									"tests [\"Currency is correct\"] = jsonData.Data.BuyCurrency === \"USD\""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ amount:\"1.5\",\r\nboughtOnTs:1522752052,\r\nbuyCurrency:\"USD\",\r\nbuyPrice:\"2.5\",\r\ncoinId:5039,\r\ndescription:\"The Description\",\r\nid:{{Coin_ID}},\r\nportfolioId:{{Portfolio_ID}} }\r\n"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/coinupdate",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"coinupdate"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete coin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "51be58c0-a935-410c-94d3-74281642cb84",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b77f0dec-c9e9-4f06-ac1f-9b52b176812e",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"var Port_ID = parseInt(pm.environment.get(\"Portfolio_ID\"));",
+									"",
+									"tests [\"Portfolio ID is correct\"] = jsonData.Data.PortfolioId === Port_ID ",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ id: {{Coin_ID}} }\r\n"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/coindelete",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"coindelete"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete portfolio",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "51be58c0-a935-410c-94d3-74281642cb84",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "98e55992-a2a3-4920-ae22-edc14f6bb9d7",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests [\"Response = Success\"] = jsonData.Response === \"Success\";",
+									"",
+									"var Port_ID = parseInt(pm.environment.get(\"Portfolio_ID\"));",
+									"",
+									"tests [\"Portfolio ID is correct\"] = jsonData.Data.Id === Port_ID ",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ id: {{Portfolio_ID}} }\r\n"
+						},
+						"url": {
+							"raw": "https://www.cryptocompare.com/api/portfolio/post/delete",
+							"protocol": "https",
+							"host": [
+								"www",
+								"cryptocompare",
+								"com"
+							],
+							"path": [
+								"api",
+								"portfolio",
+								"post",
+								"delete"
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				}
